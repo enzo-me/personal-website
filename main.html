@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Enzo Merioud</title>
+    <style>
+        /* --- RÉINITIALISATION & BASES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.4;
+            color: #1d1d1f;
+            background-color: #fff;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- GESTION DES LANGUES --- */
+        /* Par défaut (mode FR) : on cache les éléments EN */
+        body:not(.en-mode) .lang-en { display: none !important; }
+        
+        /* En mode EN : on cache les éléments FR */
+        body.en-mode .lang-fr { display: none !important; }
+
+        /* Le bouton de switch */
+        .lang-switch {
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 30px;
+            user-select: none; /* Empêche de sélectionner le texte du bouton */
+        }
+        .lang-switch span { transition: color 0.3s; }
+        
+        /* Couleurs actives/inactives */
+        body:not(.en-mode) #btn-fr { color: #1d1d1f; }
+        body:not(.en-mode) #btn-en { color: #86868b; }
+        
+        body.en-mode #btn-en { color: #1d1d1f; }
+        body.en-mode #btn-fr { color: #86868b; }
+
+
+        /* --- NAVIGATION --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            animation: fadeDown 0.8s ease-out forwards;
+        }
+
+        nav {
+            max-width: 980px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo { font-weight: 600; font-size: 1.1rem; letter-spacing: -0.02em; }
+
+        .nav-right { display: flex; align-items: center; }
+
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-size: 12px; font-weight: 400; color: #1d1d1f; opacity: 0.8; }
+        .nav-links a:hover { opacity: 0.5; color: #0071e3; }
+
+        /* --- LAYOUT GÉNÉRAL --- */
+        section { padding: 120px 20px; max-width: 980px; margin: 0 auto; }
+
+        h1 { font-size: 48px; line-height: 1.08; font-weight: 600; letter-spacing: -0.003em; color: #1d1d1f; margin-bottom: 15px; }
+        h2 { font-size: 40px; line-height: 1.1; font-weight: 600; margin-bottom: 40px; }
+        p { font-size: 19px; line-height: 1.42; font-weight: 400; color: #86868b; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes zoomFadeIn { from { opacity: 0; transform: scale(1.08) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero-animate { opacity: 0; animation: zoomFadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.7s; }
+
+        .scroll-block { opacity: 0; transform: translateY(50px); transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .scroll-block.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* --- ELEMENTS SPECIFIQUES --- */
+        #accueil { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; text-align: center; padding-top: 80px; }
+        .hero-subtitle { font-size: 24px; font-weight: 500; color: #1d1d1f; margin-bottom: 20px; }
+
+        .section-bg-grey { background-color: #f5f5f7; max-width: 100%; }
+        .content-wrapper { max-width: 980px; margin: 0 auto; }
+
+        .job-item { background: #fff; padding: 40px; border-radius: 18px; margin-bottom: 30px; box-shadow: 2px 4px 12px rgba(0,0,0,0.02); }
+        .job-title { font-size: 24px; font-weight: 600; color: #1d1d1f; }
+        .job-company { font-size: 19px; color: #86868b; margin-top: 5px;}
+        .job-date { font-size: 14px; color: #86868b; margin-bottom: 20px; display: block; font-weight: 600;}
+        .job-item ul li { font-size: 17px; color: #424245; margin-bottom: 10px; position: relative; padding-left: 15px; }
+        .job-item ul li::before { content: "•"; position: absolute; left: 0; color: #86868b; }
+
+        #contact { text-align: center; }
+        .btn-apple { display: inline-block; background-color: #0071e3; color: #fff; padding: 12px 25px; border-radius: 980px; font-size: 17px; font-weight: 400; margin-top: 30px; min-width: 180px; }
+        .btn-apple:hover { background-color: #0077ED; }
+        .link-classic { color: #0071e3; font-size: 17px; margin-top: 20px; display: inline-block; }
+        .link-classic:hover { text-decoration: underline; }
+
+        footer { background: #f5f5f7; font-size: 12px; color: #86868b; padding: 40px 0; border-top: 1px solid #d2d2d7; text-align: center; }
+
+        @media (max-width: 734px) {
+            h1 { font-size: 36px; }
+            .nav-links { display: none; } /* Menu simplifié mobile */
+        }
+        /* --- LIEN "MON TRAVAIL" --- */
+        .work-link {
+            font-size: 15px;
+            font-weight: 600; /* Un peu plus gras pour être visible */
+            color: #0071e3;   /* Bleu Apple */
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .work-link:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">Enzo Merioud</div>
+            
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li>
+                        <a href="#accueil">
+                            <span class="lang-fr">Accueil</span>
+                            <span class="lang-en">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#experience">
+                            <span class="lang-fr">Expérience et expertise</span>
+                            <span class="lang-en">Experience and expertise</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#contact">
+                            <span class="lang-fr">Contact</span>
+                            <span class="lang-en">Contact</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="lang-switch" onclick="toggleLanguage()">
+                    <span id="btn-fr">FR</span> | <span id="btn-en">EN</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="accueil">
+        <h1 class="hero-animate delay-1">
+            <span class="lang-fr">Enzo<br>MERIOUD</span>
+            <span class="lang-en">Enzo<br>MERIOUD</span>
+        </h1>
+        
+        <p class="hero-subtitle hero-animate delay-2">
+            <span class="lang-fr">Étudiant en deuxième année à Sciences Po Paris, spécialisé en African Studies</span>
+            <span class="lang-en">Second year student at Sciences Po Paris, specializing in Africa studies on the Reims Campus</span>
+        </p>
+        
+        <p class="hero-animate delay-3" style="max-width: 600px; margin: 20px auto 0;">
+            <span class="lang-fr">Passionné par les Études africaines et les Relations Internationales</span>
+            <span class="lang-en">Passionnated by African studies and International Relations</span>
+        </p>
+    </section>
+
+    <div class="section-bg-grey" id="experience">
+        <section>
+            <div class="content-wrapper">
+                <h2 class="scroll-block" style="text-align: center;">
+                    <span class="lang-fr">Expérience.</span>
+                    <span class="lang-en">Experience</span>
+                </h2>
+
+                <div class="job-item scroll-block">
+                    <h3 class="job-title">
+                        <span class="lang-fr">Responsable du Pôle Communications</span>
+                        <span class="lang-en">Head of Communications Pole</span>
+                    </h3>
+                    <a href="https://www.linkedin.com/company/bde-sciences-po-campus-de-reims/" target="_blank" class="work-link">
+                        <div class="job-company">BDE Sciences Po Campus de Reims</div>
+                    </a>
+                    <span class="job-date">
+                        <span class="lang-fr">Juin 2025 — Présent</span>
+                        <span class="lang-en">Juin 2025 — Present</span>
+                    </span>
+                    <ul>
+                        <li class="lang-fr">Promotion des évènements de l'association sur le campus (affiches, flyers, stands...) et sur Instagram (posts, stories, et reels)</li>
+                        <li class="lang-en">Promotion of the association events on campus (posters, flyers, stands, etc.) and on Instagram (posts, stories, and reels).</li>
+                        
+                        <li class="lang-fr">Organisation et gestion de dizaines d'évènements dans l'année, comme la semaine d'intégration, les galas de fin de semestre, etc.</li>
+                        <li class="lang-en">Organization and management of dozens of events throughout the year, such as integration week, end-of-semester galas, etc.</li>
+                    </ul>
+                    <div style="margin-top: 20px;">
+                        <a href="https://www.instagram.com/bde.scporeims/" target="_blank" class="work-link">
+                            <span class="lang-fr">Voir mon travail ›</span>
+                            <span class="lang-en">View my work ›</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="job-item scroll-block">
+                    <h3 class="job-title">
+                        <span class="lang-fr">Stagiaire auprès d'Éducateurs Spécialisés</span>
+                        <span class="lang-en">Intern with Special Educators</span>
+                    </h3>
+                    <a href="https://www.linkedin.com/company/institut-national-des-jeunes-aveugles-inja/posts/?feedView=all" target="_blank" class="work-link">
+                        <div class="job-company">Institut National des Jeunes Aveugles (INJA-Louis Braille)</div>
+                    </a>
+                    <span class="job-date">Juin — Juillet 2025</span>
+                    <ul>
+                        <li class="lang-fr">Observer et accompagner une équipe d’éducateurs spécialisés auprès de lycéens déficients visuels, afin de soutenir leur autonomie scolaire, sociale et personnelle.</li>
+                        <li class="lang-en">Observe and support a team of specialized educators working with visually impaired high school students to help them become more independent in school, socially, and personally.</li>
+                        
+                        <li class="lang-fr">Participer à l’animation d’ateliers éducatifs et de temps de vie collective, en adaptant activités, consignes et supports aux besoins spécifiques des jeunes.</li>
+                        <li class="lang-en">Help run educational workshops and group activities, adapting activities, instructions, and materials to the specific needs of young people.</li>
+                    </ul>
+                </div>
+                <h2 class="scroll-block" style="text-align: center; margin-top: 60px;">
+                    <span class="lang-fr">Formation.</span>
+                    <span class="lang-en">Education.</span>
+                </h2>
+
+                <div class="job-item scroll-block">
+                    <h3 class="job-title">
+                        <span class="lang-fr">Bachelor en Politique & Gouvernement</span>
+                        <span class="lang-en">Bachelor's degree, Politics & Government</span>
+                    </h3>
+                    <div class="job-company">Sciences Po Paris, Campus de Reims</div>
+                    <span class="job-date">2024 — 2027</span>
+                    <ul>
+                        <li class="lang-fr">Suivi du Bachelor en Politique et Gouvernement, Mineure en Trade and International Finance (dispensée en anglais uniquement).</li>
+                        <li class="lang-en">Bachelor's degree in Politics and Government, Minor in Trade and International Finance (taught in English only).</li>
+                    </ul>
+                    <ul>
+                        <li class="lang-fr">Cursus centré sur les African studies à travers des études du continent dans les matières fondamentales.</li>
+                        <li class="lang-en">Curriculum specialized in africa studies through studies of the continent in core subjects.</li>
+                    </ul>
+                    <ul>
+                        <li class="lang-fr">Suivi d’un séminaire sur les Nouveaux enjeux des relations diplomatiques Europe-Afrique enseigné par le Délégué de l’Union Européenne à l’OCDE.</li>
+                        <li class="lang-en">Attended a seminar on New Challenges in Europe-Africa Diplomatic Relations taught by the European Union Delegate to the OECD.</li>
+                    </ul>
+                </div>
+
+                <div class="job-item scroll-block">
+                    <h3 class="job-title">
+                        <span class="lang-fr">Baccalauréat général, Mention très bien section européenne anglais</span>
+                        <span class="lang-en">Baccalauréat général, Mention très bien section européenne anglais</span>
+                    </h3>
+                    <div class="job-company">Lycée Newton, Clichy</div>
+                    <span class="job-date">2022 — 2024</span>
+                    <ul>
+                        <li class="lang-fr">Spécialités : Mathématiques, Physique-Chimie, Numérique et Sciences Informatiques</li>
+                        <li class="lang-en">French General Baccalauréat (equivalent to a U.S. high school diploma with advanced STEM coursework), with highest honors (GPA equivalent: top tier).</li>
+                    </ul>
+                    <ul>
+                        <li class="lang-en">Bilingual English section with advanced courses in Mathematics, Physics-Chemistry, and Computer Science.</li>
+                    </ul>
+                </div>
+
+
+                <h2 class="scroll-block" style="text-align: center; margin-top: 60px;">
+                    <span class="lang-fr">Compétences.</span>
+                    <span class="lang-en">Skills.</span>
+                </h2>
+
+                <div class="job-item scroll-block">
+                    <h4 style="font-size: 19px; margin-bottom: 15px; color:#1d1d1f;">Expertise</h4>
+                    <div class="skills-container">                        
+                        <span class="skill-tag">
+                            <span class="lang-fr">Gestion de Projet |</span>
+                            <span class="lang-en">Project Management |</span>
+                        </span>
+                        <span class="skill-tag">
+                            <span class="lang-fr">Communication & Marketing Digital |</span>
+                            <span class="lang-en">Digital Marketing & Communication |</span>
+                        </span>
+                        <span class="skill-tag">UX&UI Design</span>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid #eaeaea; margin: 25px 0;">
+
+                    <h4 style="font-size: 19px; margin-bottom: 15px; color:#1d1d1f;">Tools</h4>
+                    <div class="skills-container">
+                        <span class="skill-tag">Adobe Creative Suite (Photoshop, Lighroom CC, Illustrator & Premiere Pro) |</span>
+                        <span class="skill-tag">Microsoft 365 Suite (Excel, Powerpoint & Word) |</span>
+                        <span class="skill-tag">Canva |</span>
+                        <span class="skill-tag">HTML&CSS |</span>
+                        <span class="skill-tag">Python</span>
+                    </div>
+                    
+                    <hr style="border: 0; border-top: 1px solid #eaeaea; margin: 25px 0;">
+                    
+                    <h4 style="font-size: 19px; margin-bottom: 15px; color:#1d1d1f;">
+                        <span class="lang-fr">Langues</span>
+                        <span class="lang-en">Languages</span>
+                    </h4>
+                    <div class="skills-container">
+                        <span class="skill-tag"><span class="lang-fr">Français (Natif)</span><span class="lang-en">French (Native)</span></span>
+                        <span class="skill-tag"><span class="lang-fr">Anglais (Courant)</span><span class="lang-en">English (Fluent)</span></span>
+                        <span class="skill-tag"><span class="lang-fr">Arabe (Notions)</span><span class="lang-en">Arabic (Notions)</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section id="contact">
+        <div class="scroll-block">
+            <h2>
+                <span class="lang-fr">Intéressé par mon profil ?</span>
+                <span class="lang-en">Interested by my profile?</span>
+            </h2>
+            <p>
+                <span class="lang-fr">Je suis à la recherche d'un stage dans les affaires internationales ou publiques et ouverts aux projets ambitieux</span>
+                <span class="lang-en">I am looking for an internship in international or public affairs and am open to ambitious projects..</span>
+            </p>
+            
+            <a href="mailto:enzo.merioud@sciencespo.fr" class="btn-apple">
+                <span class="lang-fr">Me contacter</span>
+                <span class="lang-en">Contact Me</span>
+            </a>
+            <br>
+            <a href="#" class="link-classic">
+                <span class="lang-fr">Voir mon profil LinkedIn ></span>
+                <span class="lang-en">View LinkedIn Profile ></span>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="content-wrapper">
+            <p style="font-size: 12px;">
+                <span class="lang-fr">Copyright © 2025 Enzo MERIOUD. Tous droits réservés.</span>
+                <span class="lang-en">Copyright © 2025 Enzo MERIOUD. All rights reserved.</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Gestion du scroll (Animation)
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = { root: null, threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            document.querySelectorAll('.scroll-block').forEach(target => { observer.observe(target); });
+        });
+
+        // Gestion de la langue (Toggle)
+        function toggleLanguage() {
+            document.body.classList.toggle('en-mode');
+        }
+    </script>
+
+</body>
+</html>
