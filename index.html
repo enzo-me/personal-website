@@ -6,6 +6,37 @@
     <title>Portfolio - Enzo Merioud</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231d1d1f%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2226%22>EM</text></svg>">
     <style>
+        /* --- VARIABLES DE COULEURS (THEMING) --- */
+        :root {
+            /* Mode CLAIR (Défaut) */
+            --bg-body: #ffffff;
+            --bg-section-grey: #f5f5f7;
+            --bg-card: #ffffff;
+            --bg-card-alt: #f5f5f7; /* Pour la section expertise */
+            --text-main: #1d1d1f;
+            --text-secondary: #86868b;
+            --header-bg: rgba(255, 255, 255, 0.8);
+            --tag-bg: #f5f5f7;
+            --tag-bg-alt: #ffffff;
+            --border-color: rgba(0,0,0,0.05);
+            --shadow: 2px 4px 12px rgba(0,0,0,0.02);
+        }
+
+        /* Mode SOMBRE */
+        body.dark-mode {
+            --bg-body: #000000;
+            --bg-section-grey: #111111; /* Gris très foncé */
+            --bg-card: #1c1c1e; /* Gris système iOS Dark */
+            --bg-card-alt: #1c1c1e;
+            --text-main: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --header-bg: rgba(28, 28, 30, 0.8);
+            --tag-bg: #2c2c2e;
+            --tag-bg-alt: #2c2c2e;
+            --border-color: rgba(255,255,255,0.1);
+            --shadow: none;
+        }
+
         /* --- RÉINITIALISATION & BASES --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -13,38 +44,38 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.4;
-            color: #1d1d1f;
-            background-color: #fff;
+            color: var(--text-main);
+            background-color: var(--bg-body);
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.4s, color 0.4s; /* Transition douce lors du changement de thème */
         }
 
         a { text-decoration: none; color: inherit; transition: 0.3s; }
         ul { list-style: none; }
 
         /* --- GESTION DES LANGUES --- */
-        /* Par défaut (mode FR) : on cache les éléments EN */
         body:not(.en-mode) .lang-en { display: none !important; }
-        
-        /* En mode EN : on cache les éléments FR */
         body.en-mode .lang-fr { display: none !important; }
 
-        /* Le bouton de switch */
         .lang-switch {
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            margin-left: 30px;
-            user-select: none; /* Empêche de sélectionner le texte du bouton */
+            margin-left: 20px;
+            user-select: none;
+            border: 1px solid var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            opacity: 0.7;
         }
-        .lang-switch span { transition: color 0.3s; }
+        .lang-switch:hover { opacity: 1; }
         
-        /* Couleurs actives/inactives */
-        body:not(.en-mode) #btn-fr { color: #1d1d1f; }
-        body:not(.en-mode) #btn-en { color: #86868b; }
-        
-        body.en-mode #btn-en { color: #1d1d1f; }
-        body.en-mode #btn-fr { color: #86868b; }
+        /* Couleurs actives/inactives boutons langue */
+        body:not(.en-mode) #btn-fr { color: var(--text-main); }
+        body:not(.en-mode) #btn-en { color: var(--text-secondary); }
+        body.en-mode #btn-en { color: var(--text-main); }
+        body.en-mode #btn-fr { color: var(--text-secondary); }
 
 
         /* --- NAVIGATION --- */
@@ -53,14 +84,15 @@
             top: 0;
             width: 100%;
             height: 48px;
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--header-bg);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
             z-index: 1000;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border-color);
             animation: fadeDown 0.8s ease-out forwards;
+            transition: background 0.4s;
         }
 
         nav {
@@ -73,20 +105,37 @@
             padding: 0 20px;
         }
 
-        .logo { font-weight: 600; font-size: 1.1rem; letter-spacing: -0.02em; }
+        .logo { font-weight: 600; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--text-main); }
 
         .nav-right { display: flex; align-items: center; }
 
         .nav-links { display: flex; gap: 30px; }
-        .nav-links a { font-size: 12px; font-weight: 400; color: #1d1d1f; opacity: 0.8; }
+        .nav-links a { font-size: 12px; font-weight: 400; color: var(--text-main); opacity: 0.8; }
         .nav-links a:hover { opacity: 0.5; color: #0071e3; }
+
+        /* BOUTON DARK MODE */
+        .theme-toggle {
+            cursor: pointer;
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px; 
+            height: 30px;
+        }
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-main);
+            transition: fill 0.3s;
+        }
 
         /* --- LAYOUT GÉNÉRAL --- */
         section { padding: 120px 20px; max-width: 980px; margin: 0 auto; }
 
-        h1 { font-size: 48px; line-height: 1.08; font-weight: 600; letter-spacing: -0.003em; color: #1d1d1f; margin-bottom: 15px; }
-        h2 { font-size: 40px; line-height: 1.1; font-weight: 600; margin-bottom: 40px; }
-        p { font-size: 19px; line-height: 1.42; font-weight: 400; color: #86868b; }
+        h1 { font-size: 48px; line-height: 1.08; font-weight: 600; letter-spacing: -0.003em; color: var(--text-main); margin-bottom: 15px; }
+        h2 { font-size: 40px; line-height: 1.1; font-weight: 600; margin-bottom: 40px; color: var(--text-main); }
+        p { font-size: 19px; line-height: 1.42; font-weight: 400; color: var(--text-secondary); }
 
         /* --- ANIMATIONS --- */
         @keyframes zoomFadeIn { from { opacity: 0; transform: scale(1.08) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
@@ -102,17 +151,34 @@
 
         /* --- ELEMENTS SPECIFIQUES --- */
         #accueil { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; text-align: center; padding-top: 80px; }
-        .hero-subtitle { font-size: 24px; font-weight: 500; color: #1d1d1f; margin-bottom: 20px; }
+        .hero-subtitle { font-size: 24px; font-weight: 500; color: var(--text-main); margin-bottom: 20px; }
 
-        .section-bg-grey { background-color: #f5f5f7; max-width: 100%; }
+        /* Classes de fond dynamiques */
+        .section-bg-grey { background-color: var(--bg-section-grey); max-width: 100%; transition: background-color 0.4s; }
         .content-wrapper { max-width: 980px; margin: 0 auto; }
 
-        .job-item { background: #fff; padding: 40px; border-radius: 18px; margin-bottom: 30px; box-shadow: 2px 4px 12px rgba(0,0,0,0.02); }
-        .job-title { font-size: 24px; font-weight: 600; color: #1d1d1f; }
-        .job-company { font-size: 19px; color: #86868b; margin-top: 5px;}
-        .job-date { font-size: 14px; color: #86868b; margin-bottom: 20px; display: block; font-weight: 600;}
-        .job-item ul li { font-size: 17px; color: #424245; margin-bottom: 10px; position: relative; padding-left: 15px; }
-        .job-item ul li::before { content: "•"; position: absolute; left: 0; color: #86868b; }
+        .job-item { 
+            background: var(--bg-card); 
+            padding: 40px; 
+            border-radius: 18px; 
+            margin-bottom: 30px; 
+            box-shadow: var(--shadow);
+            transition: background-color 0.4s;
+        }
+        
+        /* Classe spéciale pour les cartes inversées (section expertise) */
+        .job-item-alt {
+            background: var(--bg-card-alt);
+        }
+
+        .job-title { font-size: 24px; font-weight: 600; color: var(--text-main); }
+        .job-company { font-size: 19px; color: var(--text-secondary); margin-top: 5px;}
+        .job-date { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; display: block; font-weight: 600;}
+        .job-item ul li { font-size: 17px; color: var(--text-main); margin-bottom: 10px; position: relative; padding-left: 15px; opacity: 0.9; }
+        .job-item ul li::before { content: "•"; position: absolute; left: 0; color: var(--text-secondary); }
+        
+        /* Titres de sous-sections (Outils, etc) */
+        h4 { font-size: 19px; margin-bottom: 15px; color: var(--text-main); }
 
         #contact { text-align: center; }
         .btn-apple { display: inline-block; background-color: #0071e3; color: #fff; padding: 12px 25px; border-radius: 980px; font-size: 17px; font-weight: 400; margin-top: 30px; min-width: 180px; }
@@ -120,50 +186,44 @@
         .link-classic { color: #0071e3; font-size: 17px; margin-top: 20px; display: inline-block; }
         .link-classic:hover { text-decoration: underline; }
 
-        footer { background: #f5f5f7; font-size: 12px; color: #86868b; padding: 40px 0; border-top: 1px solid #d2d2d7; text-align: center; }
+        footer { background: var(--bg-section-grey); font-size: 12px; color: var(--text-secondary); padding: 40px 0; border-top: 1px solid var(--border-color); text-align: center; transition: background-color 0.4s;}
 
         @media (max-width: 734px) {
             h1 { font-size: 36px; }
-            .nav-links { display: none; } /* Menu simplifié mobile */
-        }
-        /* --- STYLE DES TAGS (COMPETENCES) --- */
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px; /* Espace entre les bulles */
-            margin-top: 10px;
+            .nav-links { display: none; } 
         }
         
+        /* --- STYLE DES TAGS (COMPETENCES) --- */
+        .skills-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        
         .skill-tag {
-            background-color: #f5f5f7; /* Gris clair Apple */
-            color: #1d1d1f;
+            background-color: var(--tag-bg);
+            color: var(--text-main);
             padding: 8px 16px;
-            border-radius: 20px; /* Arrondi fort pour effet "pilule" */
+            border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
             transition: 0.2s;
             cursor: default;
-            border: 1px solid transparent; /* Pour éviter le saut au hover */
+            border: 1px solid transparent;
         }
 
-        .skill-tag:hover {
-            background-color: #e8e8ed; /* Un peu plus foncé au survol */
-            border-color: #d2d2d7;
-        }        
-        /* --- LIEN "MON TRAVAIL" --- */
+        /* Variante pour la section expertise (tags blancs sur fond gris en mode light) */
+        .skill-tag-alt {
+            background-color: var(--tag-bg-alt);
+        }
+
+        .skill-tag:hover { background-color: var(--text-secondary); color: var(--bg-body); }  
+              
         .work-link {
             font-size: 15px;
-            font-weight: 600; /* Un peu plus gras pour être visible */
-            color: #0071e3;   /* Bleu Apple */
+            font-weight: 600; 
+            color: #0071e3;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
         }
-        
-        .work-link:hover {
-            text-decoration: underline;
-            cursor: pointer;
-        }
+        .work-link:hover { text-decoration: underline; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -174,35 +234,19 @@
             
             <div class="nav-right">
                 <ul class="nav-links">
-                    <li>
-                        <a href="#accueil">
-                            <span class="lang-fr">Accueil</span>
-                            <span class="lang-en">Home</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#experience">
-                            <span class="lang-fr">Expérience</span>
-                            <span class="lang-en">Experience</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#expertise">
-                            <span class="lang-fr">Expertise</span>
-                            <span class="lang-en">Expertise</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#contact">
-                            <span class="lang-fr">Contact</span>
-                            <span class="lang-en">Contact</span>
-                        </a>
-                    </li>
+                    <li><a href="#accueil"><span class="lang-fr">Accueil</span><span class="lang-en">Home</span></a></li>
+                    <li><a href="#experience"><span class="lang-fr">Expérience</span><span class="lang-en">Experience</span></a></li>
+                    <li><a href="#expertise"><span class="lang-fr">Expertise</span><span class="lang-en">Expertise</span></a></li>
+                    <li><a href="#contact"><span class="lang-fr">Contact</span><span class="lang-en">Contact</span></a></li>
                 </ul>
 
                 <div class="lang-switch" onclick="toggleLanguage()">
                     <span id="btn-fr">FR</span> | <span id="btn-en">EN</span>
                 </div>
+
+                <div class="theme-toggle" onclick="toggleTheme()" title="Mode Sombre/Clair">
+                    <svg id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </div>
             </div>
         </nav>
     </header>
@@ -224,7 +268,7 @@
         </p>
     </section>
 
-<div class="section-bg-grey" id="experience">
+    <div class="section-bg-grey" id="experience">
         <section>
             <div class="content-wrapper">
                 
@@ -328,49 +372,45 @@
         <div class="content-wrapper">
             
             <h2 class="scroll-block" style="text-align: center;">
-                <span class="lang-fr">Expértise.</span>
+                <span class="lang-fr">Expertise.</span>
                 <span class="lang-en">Expertise.</span>
             </h2>
 
-            <div class="job-item scroll-block" style="background: #f5f5f7;"> 
-                <h4 style="font-size: 19px; margin-bottom: 15px; color:#1d1d1f;">
+            <div class="job-item scroll-block job-item-alt"> 
+                <h4 style="color: var(--text-main);">
                     <span class="lang-fr">Domaines</span>
                     <span class="lang-en">Fields</span>
                 </h4> 
                 <div class="skills-container">                        
-                    <span class="skill-tag" style="background: white;"> <span class="lang-fr">Gestion de Projet</span>
-                    <span class="lang-en">Project Management</span> </span>
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Communication & Marketing Digital</span>
-                        <span class="lang-en">Digital Marketing & Communication</span>
-                    </span>
-                    <span class="skill-tag" style="background: white;">UX&UI Design</span>
+                    <span class="skill-tag skill-tag-alt"> <span class="lang-fr">Gestion de Projet</span><span class="lang-en">Project Management</span> </span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Communication & Marketing Digital</span><span class="lang-en">Digital Marketing & Communication</span></span>
+                    <span class="skill-tag skill-tag-alt">UX&UI Design</span>
                 </div>
 
-                <hr style="border: 0; border-top: 1px solid #d2d2d7; margin: 25px 0;">
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 25px 0;">
 
-                <h4 style="font-size: 19px; margin-bottom: 15px; color:#1d1d1f;">
+                <h4 style="color: var(--text-main);">
                     <span class="lang-fr">Outils</span>
                     <span class="lang-en">Tools</span>
                 </h4>                    
                 <div class="skills-container">
-                    <span class="skill-tag" style="background: white;">Adobe Creative Suite</span>
-                    <span class="skill-tag" style="background: white;">Microsoft 365</span>
-                    <span class="skill-tag" style="background: white;">Canva</span>
-                    <span class="skill-tag" style="background: white;">HTML & CSS</span>
-                    <span class="skill-tag" style="background: white;">Python</span>
+                    <span class="skill-tag skill-tag-alt">Adobe Creative Suite</span>
+                    <span class="skill-tag skill-tag-alt">Microsoft 365</span>
+                    <span class="skill-tag skill-tag-alt">Canva</span>
+                    <span class="skill-tag skill-tag-alt">HTML & CSS</span>
+                    <span class="skill-tag skill-tag-alt">Python</span>
                 </div>
                 
-                <hr style="border: 0; border-top: 1px solid #d2d2d7; margin: 25px 0;">
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 25px 0;">
                 
-                <h4 style="font-size: 19px; margin-bottom: 15px; color:#1d1d1f;">
+                <h4 style="color: var(--text-main);">
                     <span class="lang-fr">Langues</span>
                     <span class="lang-en">Languages</span>
                 </h4>
                 <div class="skills-container">
-                    <span class="skill-tag" style="background: white;"><span class="lang-fr">Français (Natif)</span><span class="lang-en">French (Native)</span></span>
-                    <span class="skill-tag" style="background: white;"><span class="lang-fr">Anglais (Courant)</span><span class="lang-en">English (Fluent)</span></span>
-                    <span class="skill-tag" style="background: white;"><span class="lang-fr">Arabe (Notions)</span><span class="lang-en">Arabic (Notions)</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Français (Natif)</span><span class="lang-en">French (Native)</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Anglais (Courant)</span><span class="lang-en">English (Fluent)</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Arabe (Notions)</span><span class="lang-en">Arabic (Notions)</span></span>
                 </div>
             </div>
 
@@ -379,67 +419,36 @@
                 <span class="lang-en">Interests.</span>
             </h2>
 
-            <div class="job-item scroll-block" style="background: #f5f5f7;">
-                <h4 style="font-size: 19px; margin-bottom: 15px; color:#1d1d1f;">
+            <div class="job-item scroll-block job-item-alt">
+                <h4 style="color: var(--text-main);">
                     <span class="lang-fr">Académiques</span>
                     <span class="lang-en">Academic</span>
                 </h4>                      
                 <div class="skills-container">                        
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Études africaines</span>
-                        <span class="lang-en">African Studies</span>
-                    </span>
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Relations internationales</span>
-                        <span class="lang-en">International Relations</span>
-                    </span>
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Diplomatie Europe–Afrique</span>
-                        <span class="lang-en">European–African Diplomacy</span>
-                    </span>
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Politiques publiques</span>
-                        <span class="lang-en">Public Policy</span>
-                    </span>
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Économie du développement</span>
-                        <span class="lang-en">Development Economics</span>
-                    </span>
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Commerce et Finance Internationale</span>
-                        <span class="lang-en">International Trade and Finance</span>
-                    </span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Études africaines</span><span class="lang-en">African Studies</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Relations internationales</span><span class="lang-en">International Relations</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Diplomatie Europe–Afrique</span><span class="lang-en">European–African Diplomacy</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Politiques publiques</span><span class="lang-en">Public Policy</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Économie du développement</span><span class="lang-en">Development Economics</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Commerce et Finance Internationale</span><span class="lang-en">International Trade and Finance</span></span>
                 </div>
 
-                <hr style="border: 0; border-top: 1px solid #d2d2d7; margin: 25px 0;">
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 25px 0;">
 
-                <h4 style="font-size: 19px; margin-bottom: 15px; color:#1d1d1f;">
+                <h4 style="color: var(--text-main);">
                     <span class="lang-fr">Autres</span>
                     <span class="lang-en">Other</span>
                 </h4>                    
                 <div class="skills-container">
-                    <span class="skill-tag" style="background: white;">
-                            <span class="lang-fr">IA & Machine Learning</span>
-                            <span class="lang-en">AI & Machine Learning</span>
-                    </span>
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Photographie (Photographie de rue et portraits)</span>
-                        <span class="lang-en">Photography (Street photography and portraits)</span>
-                    </span>
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Musique (Violon depuis l'enfance)</span>
-                        <span class="lang-en">Music (Violin since childhood)</span>
-                    </span>
-                    <span class="skill-tag" style="background: white;">
-                        <span class="lang-fr">Sports (Musculation & Boxe anglaise)</span>
-                        <span class="lang-en">Sports (Weightlifting & Boxing)</span>
-                    </span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">IA & Machine Learning</span><span class="lang-en">AI & Machine Learning</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Photographie (Rue & Portraits)</span><span class="lang-en">Photography (Street & Portraits)</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Musique (Violon depuis l'enfance)</span><span class="lang-en">Music (Violin since childhood)</span></span>
+                    <span class="skill-tag skill-tag-alt"><span class="lang-fr">Sports (Musculation & Boxe)</span><span class="lang-en">Sports (Weightlifting & Boxing)</span></span>
                 </div>
             </div>
 
         </div>
     </section>
-    </div>
 
     <section class="section-bg-grey" id="contact">
         <div class="scroll-block">
@@ -474,7 +483,7 @@
     </footer>
 
     <script>
-        // Gestion du scroll (Animation)
+        // 1. Gestion du Scroll
         document.addEventListener("DOMContentLoaded", () => {
             const observerOptions = { root: null, threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
             const observer = new IntersectionObserver((entries, observer) => {
@@ -486,11 +495,28 @@
                 });
             }, observerOptions);
             document.querySelectorAll('.scroll-block').forEach(target => { observer.observe(target); });
+            
+            // 2. Vérifier si l'utilisateur avait déjà choisi le mode sombre
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
         });
 
-        // Gestion de la langue (Toggle)
+        // 3. Toggle Langue
         function toggleLanguage() {
             document.body.classList.toggle('en-mode');
+        }
+
+        // 4. Toggle Dark Mode
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            
+            // Sauvegarder le choix dans le navigateur
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
         }
     </script>
 
