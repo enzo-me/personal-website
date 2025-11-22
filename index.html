@@ -126,6 +126,30 @@
             h1 { font-size: 36px; }
             .nav-links { display: none; } /* Menu simplifié mobile */
         }
+        /* --- STYLE DES TAGS (COMPETENCES) --- */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Espace entre les bulles */
+            margin-top: 10px;
+        }
+        
+        .skill-tag {
+            background-color: #f5f5f7; /* Gris clair Apple */
+            color: #1d1d1f;
+            padding: 8px 16px;
+            border-radius: 20px; /* Arrondi fort pour effet "pilule" */
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            cursor: default;
+            border: 1px solid transparent; /* Pour éviter le saut au hover */
+        }
+
+        .skill-tag:hover {
+            background-color: #e8e8ed; /* Un peu plus foncé au survol */
+            border-color: #d2d2d7;
+        }        
         /* --- LIEN "MON TRAVAIL" --- */
         .work-link {
             font-size: 15px;
